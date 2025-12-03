@@ -39,18 +39,10 @@ const Navbar = () => {
 
            
 
-            <NavLink
-              to="/events"
-              className={({ isActive }) =>
-                `transition duration-200 hover:text-[#87CEFAFF] font-semibold
-      ${isActive ? "text-[#87CEFAFF] border-b-2 border-[#87CEFAFF]" : ""}`
-              }
-            >
-              Events
-            </NavLink>
+          
 
             <NavLink
-              to="/gallery"
+              to="/about"
               className={({ isActive }) =>
                 `transition duration-200 hover:text-[#87CEFAFF] font-semibold
       ${isActive ? "text-[#87CEFAFF] border-b-2 border-[#87CEFAFF]" : ""}`
@@ -72,14 +64,14 @@ const Navbar = () => {
 
 
           {/* Join Us Button */}
-          <a
-            href="/join-us"
+          <NavLink
+            to="/signup"
             className="bg-[#4A90E2FF] text-white font-semibold px-6 py-2 rounded-lg
                        hover:bg-[#4A90E2FF] hover:scale-105
                        transition-[colors,transform] duration-300"
           >
             Sign Up
-          </a>
+          </NavLink>
 
         </div>
 
