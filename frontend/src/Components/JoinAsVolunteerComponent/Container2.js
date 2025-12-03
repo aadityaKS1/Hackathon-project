@@ -1,6 +1,6 @@
 import React from 'react'
 
-function Container1() {
+function Container2() {
     return (
         <div className="relative top-[52px] w-full h-[1482px] bg-transparent">
 
@@ -9,7 +9,7 @@ function Container1() {
 
                 {/* Title */}
                 <h1 className="absolute top-[327px] font-poppins text-[48px] leading-[48px] font-extrabold text-black text-center">
-                    Create Impact with Your Organization
+                    Create Impact with Your Presence
                 </h1>
 
                 {/* Subtitle */}
@@ -22,4 +22,4 @@ function Container1() {
     )
 }
 
-export default Container1
+export default Container2
