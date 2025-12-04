@@ -52,6 +52,16 @@ const Navbar = () => {
             </NavLink>
 
             <NavLink
+              to="/events"
+              className={({ isActive }) =>
+                `transition duration-200 hover:text-[#87CEFAFF] font-semibold
+      ${isActive ? "text-[#87CEFAFF] border-b-2 border-[#87CEFAFF]" : ""}`
+              }
+            >
+              Events 
+            </NavLink>
+
+            <NavLink
               to="/contact"
               className={({ isActive }) =>
                 `transition duration-200 hover:text-[#87CEFAFF] font-semibold
