@@ -6,7 +6,7 @@ import Youtube from '../Assets/Youtube_logo.png'
 
 const Footer = () => {
     return (
-        <footer className="bg-[#004D7CFF] w-full py-20">
+        <footer className="sticky bottom-0 bg-[#004D7CFF] w-full py-20">
             <div className="max-w-[98%] mx-auto flex justify-between gap-8 p-9">
 
                 {/* Column 1: Rotaract Club Info */}
