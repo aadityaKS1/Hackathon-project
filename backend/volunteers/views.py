@@ -12,12 +12,14 @@ class VolunteerRegistrationView(APIView):
     def post(self, request):
         serializer = VolunteerSerializer(data=request.data)
         if serializer.is_valid():
-            volunteer = serializer.save(is_active=False)  # inactive until verified
+            volunteer = serializer.save(is_active=False)  
+            volunteer.set_password(request.data["password"])
+            volunteer.save()# inactive until verified
 
             # Generate activation link
             uid = urlsafe_base64_encode(force_bytes(volunteer.pk))
             token = account_activation_token.make_token(volunteer)
-            activation_link = f"http://localhost:5173/verify/{uid}/{token}"
+            activation_link = f"http://localhost:3000/verify/{uid}/{token}"
 
             message = f"""
 Hello {volunteer.full_name},
@@ -49,10 +51,14 @@ from rest_framework.decorators import api_view
 
 @api_view(["GET"])
 def activate_volunteer(request, uidb64, token):
+    print("UIDB64:", uidb64)
+    print("Token:", token)
     try:
         uid = force_str(urlsafe_base64_decode(uidb64))
         volunteer = Volunteer.objects.get(pk=uid)
-    except Exception:
+        print("Volunteer found:", volunteer.email)
+    except Exception as e:
+        print("Activation error:", e)
         volunteer = None
 
     if volunteer is not None and account_activation_token.check_token(volunteer, token):
@@ -62,25 +68,39 @@ def activate_volunteer(request, uidb64, token):
     
     return Response({"error": "Invalid or expired link"}, status=400)
 
-# Login view
-from rest_framework.authtoken.models import Token
+
+
+
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from .models import Volunteer
 
 class VolunteerLoginView(APIView):
     def post(self, request):
         email = request.data.get("email")
         password = request.data.get("password")
 
-        try:
-            volunteer = Volunteer.objects.get(email=email)
-        except Volunteer.DoesNotExist:
-            return Response({"error": "Invalid credentials"}, status=400)
+        # 1. Validate input
+        if not email or not password:
+            return Response({"error": "Email and password are required."},
+                            status=status.HTTP_400_BAD_REQUEST)
 
+        # 2. Find volunteer by email
+        volunteer = Volunteer.objects.filter(email=email).first()
+        if not volunteer:
+            return Response({"error": "Invalid credentials."},
+                            status=status.HTTP_400_BAD_REQUEST)
+
+        # 3. Check if account is active
         if not volunteer.is_active:
-            return Response({"error": "Email not verified."}, status=403)
+            return Response({"error": "Account not activated. Check your email."},
+                            status=status.HTTP_403_FORBIDDEN)
 
+        # 4. Check password
         if not volunteer.check_password(password):
-            return Response({"error": "Invalid credentials"}, status=400)
+            return Response({"error": "Invalid credentials."},
+                            status=status.HTTP_400_BAD_REQUEST)
 
-        # Custom token
-        token, _ = Token.objects.get_or_create(user_id=volunteer.pk)  # simple integer PK token
-        return Response({"message": "Login successful", "token": token.key})
+        # 5. Success
+        return Response({"message": "Login successful."}, status=status.HTTP_200_OK)
