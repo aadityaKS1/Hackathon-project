@@ -6,6 +6,7 @@ import SignUp from './Pages/SignUp'
 import SignUpComponent from './Components/SignUpComponent'
 import JoinAsOrganization from './Pages/JoinAsOrganization'
 import JoinAsVolunteer from './Pages/JoinAsVolunteer'
+import VerifyEmail from './Pages/VerifyEmail'
 
 function App() {
 
@@ -34,6 +35,10 @@ function App() {
     {
       path:"/register_volunteer",
       element:<JoinAsVolunteer/>
+    },
+    {
+      path:"/verify/:uid/:token",
+      element:<VerifyEmail />
     }
   ])
 
